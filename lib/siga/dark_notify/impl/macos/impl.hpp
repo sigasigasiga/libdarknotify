@@ -1,3 +1,5 @@
+#pragma once
+
 #include <siga/dark_notify/appearance.hpp>
 
 namespace siga::dark_notify::impl::macos {
