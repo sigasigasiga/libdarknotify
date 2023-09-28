@@ -1,0 +1,6 @@
+# meson
+bin/
+
+# clangd
+.cache/
+compile_commands.json
