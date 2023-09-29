@@ -1,7 +1,7 @@
 #include "siga/dark_notify/dark_notify.hpp"
 
 #ifdef __APPLE__
-#    include "siga/dark_notify/impl/macos/nsapp.hpp"
+#    include "siga/dark_notify/impl/macos/nsapp.h"
 #endif // __APPLE__
 
 namespace siga::dark_notify {

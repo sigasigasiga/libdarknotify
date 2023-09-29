@@ -20,8 +20,11 @@ public:
     virtual ~dark_notify_t() = default;
 
 public:
-    virtual appearance_t query()                        = 0;
     virtual void register_callback(callback_t callback) = 0;
+    virtual void unregister_callback()                  = 0;
+
+    virtual appearance_t query()                        = 0;
+
     virtual void tick()                                 = 0;
     virtual void run()                                  = 0;
 };
