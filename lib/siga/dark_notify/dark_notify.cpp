@@ -1,14 +1,14 @@
 #include "siga/dark_notify/dark_notify.hpp"
 
 #ifdef __APPLE__
-#    include "siga/dark_notify/impl/macos/impl.hpp"
+#    include "siga/dark_notify/impl/macos/nsapp.hpp"
 #endif // __APPLE__
 
 namespace siga::dark_notify {
 
 std::unique_ptr<dark_notify_t> make_default_notifier() {
 #ifdef __APPLE__
-    return std::make_unique<impl::macos::impl_t>();
+    return std::make_unique<impl::macos::nsapp_t>();
 #endif // __APPLE__
 }
 

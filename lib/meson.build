@@ -4,9 +4,9 @@ libdarknotify_sources = ['./siga/dark_notify/dark_notify.cpp']
 libdarknotify_dependencies = []
 
 if host_machine.system().startswith('darwin')
-  libdarknotify_sources += './siga/dark_notify/impl/macos/impl.mm'
+  libdarknotify_sources += './siga/dark_notify/impl/macos/nsapp.mm'
   libdarknotify_dependencies += dependency('appleframeworks', modules: ['Cocoa'])
-  libdarknotify_headers += './siga/dark_notify/impl/macos/impl.hpp'
+  libdarknotify_headers += './siga/dark_notify/impl/macos/nsapp.hpp'
 endif
 
 libdarknotify = library(

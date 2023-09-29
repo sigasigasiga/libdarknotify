@@ -1,10 +1,10 @@
-#import <siga/dark_notify/impl/macos/impl.hpp>
+#import <siga/dark_notify/impl/macos/nsapp.hpp>
 
 #import <Cocoa/Cocoa.h>
 
 namespace siga::dark_notify::impl::macos {
 
-auto impl_t::query() -> appearance_t {
+auto nsapp_t::query() -> appearance_t {
   NSOperatingSystemVersion ver =
       [NSProcessInfo processInfo].operatingSystemVersion;
   if (ver.majorVersion < 10 ||
@@ -22,7 +22,7 @@ auto impl_t::query() -> appearance_t {
   }
 }
 
-void impl_t::register_callback(callback_t callback) {
+void nsapp_t::register_callback(callback_t callback) {
   [[NSDistributedNotificationCenter defaultCenter]
       addObserverForName:@"AppleInterfaceThemeChangedNotification"
                   object:nil
@@ -32,7 +32,7 @@ void impl_t::register_callback(callback_t callback) {
               }];
 }
 
-void impl_t::tick() {
+void nsapp_t::tick() {
   NSApplication *sharedApp = [NSApplication sharedApplication];
   NSEvent *event = [sharedApp nextEventMatchingMask:NSEventMaskSystemDefined
                                           untilDate:nil
@@ -44,7 +44,7 @@ void impl_t::tick() {
   }
 }
 
-void impl_t::run() {
+void nsapp_t::run() {
   while (true) {
     tick();
   }

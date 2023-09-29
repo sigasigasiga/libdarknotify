@@ -4,10 +4,10 @@
 
 namespace siga::dark_notify::impl::macos {
 
-class impl_t : public dark_notify_t
+class nsapp_t : public dark_notify_t
 {
 public:
-    impl_t() = default;
+    nsapp_t() = default;
 
 public: // dark_notify_t
     appearance_t query() final;
