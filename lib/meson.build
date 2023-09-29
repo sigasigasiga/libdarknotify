@@ -1,4 +1,4 @@
-libdarknotify_headers = ['./siga/dark_notify/dark_notify.hpp', './siga/dark_notify/appearance.hpp']
+libdarknotify_headers = ['./siga/dark_notify/dark_notify.hpp']
 libdarknotify_includes = include_directories('.')
 libdarknotify_sources = ['./siga/dark_notify/dark_notify.cpp']
 libdarknotify_dependencies = []

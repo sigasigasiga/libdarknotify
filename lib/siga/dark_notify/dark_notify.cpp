@@ -1,23 +1,15 @@
 #include "siga/dark_notify/dark_notify.hpp"
 
-#include "siga/dark_notify/impl/macos/impl.hpp"
+#ifdef __APPLE__
+#    include "siga/dark_notify/impl/macos/impl.hpp"
+#endif // __APPLE__
 
 namespace siga::dark_notify {
 
-appearance_t query() {
-    return impl::macos::query();
-}
-
-void register_callback(callback_t callback) {
-    return impl::macos::register_callback(callback);
-}
-
-void tick() {
-    return impl::macos::tick();
-}
-
-void run() {
-    return impl::macos::run();
+std::unique_ptr<dark_notify_t> make_default_notifier() {
+#ifdef __APPLE__
+    return std::make_unique<impl::macos::impl_t>();
+#endif // __APPLE__
 }
 
 } // namespace siga::dark_notify

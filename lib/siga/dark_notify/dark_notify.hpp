@@ -1,12 +1,31 @@
 #pragma once
 
-#include <siga/dark_notify/appearance.hpp>
+#include <memory>
 
 namespace siga::dark_notify {
 
-appearance_t query();
-void register_callback(callback_t callback);
-void tick();
-void run();
+class dark_notify_t
+{
+public:
+    enum class appearance_t
+    {
+        unknown,
+        light,
+        dark
+    };
+
+    using callback_t = void (*)(appearance_t);
+
+public:
+    virtual ~dark_notify_t() = default;
+
+public:
+    virtual appearance_t query()                        = 0;
+    virtual void register_callback(callback_t callback) = 0;
+    virtual void tick()                                 = 0;
+    virtual void run()                                  = 0;
+};
+
+std::unique_ptr<dark_notify_t> make_default_notifier();
 
 } // namespace siga::dark_notify

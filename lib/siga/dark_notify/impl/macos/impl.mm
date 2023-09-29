@@ -4,7 +4,7 @@
 
 namespace siga::dark_notify::impl::macos {
 
-appearance_t query() {
+auto impl_t::query() -> appearance_t {
   NSOperatingSystemVersion ver =
       [NSProcessInfo processInfo].operatingSystemVersion;
   if (ver.majorVersion < 10 ||
@@ -22,7 +22,7 @@ appearance_t query() {
   }
 }
 
-void register_callback(callback_t callback) {
+void impl_t::register_callback(callback_t callback) {
   [[NSDistributedNotificationCenter defaultCenter]
       addObserverForName:@"AppleInterfaceThemeChangedNotification"
                   object:nil
@@ -32,7 +32,7 @@ void register_callback(callback_t callback) {
               }];
 }
 
-void tick() {
+void impl_t::tick() {
   NSApplication *sharedApp = [NSApplication sharedApplication];
   NSEvent *event = [sharedApp nextEventMatchingMask:NSEventMaskSystemDefined
                                           untilDate:nil
@@ -44,7 +44,7 @@ void tick() {
   }
 }
 
-void run() {
+void impl_t::run() {
   while (true) {
     tick();
   }
