@@ -53,9 +53,7 @@ void nsapp_t::tick() {
 }
 
 void nsapp_t::run() {
-    while(true) {
-        tick();
-    }
+    [[NSApplication sharedApplication] run];
 }
 
 } // namespace siga::dark_notify::impl::macos
