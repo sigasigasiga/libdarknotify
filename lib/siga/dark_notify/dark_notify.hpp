@@ -27,6 +27,8 @@ public:
     //
     // Also note that the callback may be triggered
     // more than once with the same value
+    //
+    // It is unspecified on which thread the callback would be invoked
     virtual void register_callback(callback_t callback) = 0;
     virtual void unregister_callback() = 0;
 
