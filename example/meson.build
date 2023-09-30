@@ -1,6 +1,5 @@
 executable(
   'main',
-  link_with: libdarknotify,
-  include_directories: libdarknotify_includes,
+  dependencies: darknotify_dep,
   sources: './main.cpp'
 )
