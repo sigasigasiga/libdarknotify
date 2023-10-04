@@ -44,7 +44,12 @@ public:
     bool valid() const noexcept { return get() != default_value(); }
     operator bool() const noexcept { return valid(); }
 
-    void reset(Handle handle = default_value()) noexcept {
+    void reset() noexcept {
+        basic_scoped_handle_t that{default_value(), get_close()};
+        swap(that);
+    }
+
+    void reset(Handle handle) noexcept {
         static_assert(
             std::is_empty_v<Close>,
             "It is not safe to reset the `Handle` if the `Close` is stateful"
