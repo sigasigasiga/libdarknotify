@@ -17,7 +17,7 @@ public:
     }
 
 public:
-    explicit basic_scoped_handle_t(
+    [[nodiscard]] explicit basic_scoped_handle_t(
         Handle handle = default_value(),
         Close close = {}
     ) noexcept
@@ -25,7 +25,9 @@ public:
         // `Close` as a reference type, and everything would work correctly
         : state_{handle, std::forward<Close>(close)} {}
 
-    basic_scoped_handle_t(basic_scoped_handle_t &&rhs) noexcept { swap(rhs); }
+    [[nodiscard]] basic_scoped_handle_t(basic_scoped_handle_t &&rhs) noexcept {
+        swap(rhs);
+    }
 
     ~basic_scoped_handle_t() {
         if(valid()) {
@@ -40,9 +42,11 @@ public:
     }
 
 public:
-    Handle get() const noexcept { return handle_ref(); }
-    bool valid() const noexcept { return get() != default_value(); }
-    operator bool() const noexcept { return valid(); }
+    [[nodiscard]] Handle get() const noexcept { return handle_ref(); }
+    [[nodiscard]] bool valid() const noexcept {
+        return get() != default_value();
+    }
+    [[nodiscard]] explicit operator bool() const noexcept { return valid(); }
 
     void reset() noexcept {
         basic_scoped_handle_t that{default_value(), get_close()};
@@ -59,20 +63,26 @@ public:
         swap(that);
     }
 
-    Handle release() noexcept {
+    [[nodiscard]] Handle release() noexcept {
         return std::exchange(handle_ref(), default_value());
     }
 
-    Close &get_close() noexcept { return std::get<Close>(state_); }
-    const Close &get_close() const noexcept { return std::get<Close>(state_); }
+    [[nodiscard]] Close &get_close() noexcept {
+        return std::get<Close>(state_);
+    }
+    [[nodiscard]] const Close &get_close() const noexcept {
+        return std::get<Close>(state_);
+    }
 
     void swap(basic_scoped_handle_t &that) noexcept {
         std::swap(state_, that.state_);
     }
 
 private:
-    Handle &handle_ref() noexcept { return std::get<Handle>(state_); }
-    const Handle &handle_ref() const noexcept {
+    [[nodiscard]] Handle &handle_ref() noexcept {
+        return std::get<Handle>(state_);
+    }
+    [[nodiscard]] const Handle &handle_ref() const noexcept {
         return std::get<Handle>(state_);
     }
 
@@ -81,7 +91,7 @@ private:
 };
 
 template<typename Handle, auto DefaultValue, typename Close>
-auto operator<=>(
+[[nodiscard]] auto operator<=>(
     const basic_scoped_handle_t<Handle, DefaultValue, Close> &lhs,
     const auto &rhs
 ) noexcept {
@@ -89,7 +99,7 @@ auto operator<=>(
 }
 
 template<typename Handle, auto DefaultValue, typename Close>
-auto operator<=>(
+[[nodiscard]] auto operator<=>(
     const auto &lhs,
     const basic_scoped_handle_t<Handle, DefaultValue, Close> &rhs
 ) noexcept {
@@ -97,7 +107,7 @@ auto operator<=>(
 }
 
 template<typename Handle, auto DefaultValue, typename Close>
-auto operator==(
+[[nodiscard]] auto operator==(
     const basic_scoped_handle_t<Handle, DefaultValue, Close> &lhs,
     std::nullptr_t
 ) noexcept {
@@ -105,7 +115,7 @@ auto operator==(
 }
 
 template<typename Handle, auto DefaultValue, typename Close>
-auto operator==(
+[[nodiscard]] auto operator==(
     std::nullptr_t,
     const basic_scoped_handle_t<Handle, DefaultValue, Close> &rhs
 ) noexcept {
@@ -113,7 +123,7 @@ auto operator==(
 }
 
 template<typename Handle, auto DefaultValue, typename Close>
-auto operator<=>(
+[[nodiscard]] auto operator<=>(
     const basic_scoped_handle_t<Handle, DefaultValue, Close> &lhs,
     const basic_scoped_handle_t<Handle, DefaultValue, Close> &rhs
 ) noexcept {
