@@ -7,9 +7,9 @@ namespace {
 
 namespace sdn = siga::dark_notify;
 
-using appearance_t = sdn::dark_notify_t::appearance_t;
+std::string_view name(sdn::dark_notify_t::appearance_t a) {
+    using appearance_t = sdn::dark_notify_t::appearance_t;
 
-std::string_view name(appearance_t a) {
     switch(a) {
         case appearance_t::unknown: {
             return "unknown";
@@ -30,9 +30,32 @@ std::string_view name(appearance_t a) {
     };
 }
 
-std::ostream &operator<<(std::ostream &os, appearance_t a) {
+std::ostream &operator<<(std::ostream &os, sdn::dark_notify_t::appearance_t a) {
     return os << name(a);
 }
+
+class notifier_callback_t
+{
+public:
+    notifier_callback_t(sdn::dark_notify_t &notifier, std::uintmax_t count)
+        : notifier_{&notifier}
+        , count_{count} {}
+
+public:
+    void operator()(sdn::dark_notify_t::appearance_t appearance) {
+        std::cout << "The system theme has changed to " << appearance
+                  << std::endl;
+
+        if(--count_ == 0) {
+            // The main loop of the notifier can be stopped like so
+            notifier_->stop();
+        }
+    }
+
+private:
+    sdn::dark_notify_t *notifier_;
+    std::uintmax_t count_;
+};
 
 } // anonymous namespace
 
@@ -45,9 +68,7 @@ int main() try {
 
     // If you want to receive updates about the system theme change,
     // you should set the callback and run the event loop
-    notifier->register_callback([](sdn::dark_notify_t::appearance_t app) {
-        std::cout << "The system theme has changed to " << app << std::endl;
-    });
+    notifier->register_callback(notifier_callback_t{*notifier, 3});
 
     // If you want to integrate `notifier`'s event loop into your existing one,
     // use `notifier->tick()`
