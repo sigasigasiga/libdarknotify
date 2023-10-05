@@ -38,6 +38,7 @@ public:
     // the behaviour of these methods is undefined
     virtual void tick() = 0;
     virtual void run() = 0;
+    virtual void stop() = 0;
 };
 
 SIGA_DARK_NOTIFY_EXPORT std::unique_ptr<dark_notify_t> make_default_notifier();

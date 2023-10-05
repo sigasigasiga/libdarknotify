@@ -56,4 +56,22 @@ void nsapp_t::run() {
     [[NSApplication sharedApplication] run];
 }
 
+void nsapp_t::stop() {
+    NSApplication *sharedApp = [NSApplication sharedApplication];
+    [sharedApp stop:nil];
+
+    // call a dummy event to wake the event loop up
+    NSEvent *dummyEvent =
+        [NSEvent otherEventWithType:NSEventTypeApplicationDefined
+                           location:NSZeroPoint
+                      modifierFlags:0
+                          timestamp:0
+                       windowNumber:0
+                            context:nil
+                            subtype:0
+                              data1:0
+                              data2:0];
+    [sharedApp postEvent:dummyEvent atStart:NO];
+}
+
 } // namespace siga::dark_notify::impl::macos

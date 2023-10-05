@@ -6,6 +6,7 @@
 
 namespace siga::dark_notify::impl::macos {
 
+// A class that uses `NSApplication` event loop to get theme info
 class nsapp_t : public dark_notify_t
 {
 public:
@@ -19,6 +20,7 @@ public: // dark_notify_t
 
     void tick() final;
     void run() final;
+    void stop() final;
 
 private:
     id<NSObject> observer_;
