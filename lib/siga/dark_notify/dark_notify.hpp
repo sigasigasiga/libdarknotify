@@ -1,5 +1,6 @@
 #pragma once
 
+#include <functional>
 #include <memory>
 
 #include <siga/dark_notify/util/export.hpp>
@@ -16,7 +17,7 @@ public:
         dark
     };
 
-    using callback_t = void (*)(appearance_t);
+    using callback_t = std::function<void(appearance_t)>;
 
 public:
     virtual ~dark_notify_t() = default;
