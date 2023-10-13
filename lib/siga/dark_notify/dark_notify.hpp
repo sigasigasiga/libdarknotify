@@ -26,6 +26,9 @@ public:
     // You must unregister the callback if it was ever registered,
     // otherwise it is undefined behaviour
     //
+    // If you want to register a new callback, you must unregister
+    // the old one first, otherwise the behaviour is undefined
+    //
     // Also note that the callback may be triggered
     // more than once with the same value
     //

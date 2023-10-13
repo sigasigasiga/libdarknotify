@@ -20,12 +20,13 @@ elif host_machine.system().startswith('windows')
   darknotify_headers += [
     './siga/dark_notify/impl/windows/reg_monitor.hpp',
     './siga/dark_notify/impl/windows/util/error.hpp',
-    './siga/dark_notify/impl/windows/util/winapi_scoped_handle.hpp'
+    './siga/dark_notify/impl/windows/util/winapi_scoped_handle.hpp',
   ]
 
   darknotify_sources += [
     './siga/dark_notify/dark_notify.cpp',
-    './siga/dark_notify/impl/windows/reg_monitor.cpp'
+    './siga/dark_notify/impl/windows/reg_monitor.cpp',
+    './siga/dark_notify/impl/windows/util/cancellable_event.cpp',
   ]
 endif
 
