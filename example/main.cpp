@@ -26,7 +26,7 @@ std::string_view name(sdn::dark_notify_t::appearance_t a) {
 
     throw std::runtime_error{
         "Undefined behaviour in the libdarknotify was triggered? "
-        "Normally this shouldn't happen, but if it does, open an issue"
+        "Normally this shouldn't happen, but if it does please open an issue"
     };
 }
 
@@ -47,6 +47,7 @@ public:
                   << std::endl;
 
         if(--count_ == 0) {
+            std::cerr << "The notification count was withdrawn. Exiting...";
             // The main loop of the notifier can be stopped like so
             notifier_->stop();
         }

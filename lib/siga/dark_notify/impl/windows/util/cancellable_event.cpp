@@ -11,10 +11,10 @@ namespace {
 
 util::scoped_event_t make_terminate_event() {
     const auto raw_event = ::CreateEventExA(
-        nullptr,           // lpEventAttributes
-        nullptr,           // lpName
-        0,                 // dwFlags
-        EVENT_MODIFY_STATE // dwDesiredAccess
+        nullptr,         // lpEventAttributes
+        nullptr,         // lpName
+        0,               // dwFlags
+        EVENT_ALL_ACCESS // dwDesiredAccess
     );
 
     if(raw_event == nullptr) {
