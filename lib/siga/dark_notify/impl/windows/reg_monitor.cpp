@@ -18,6 +18,21 @@ constexpr std::string_view reg_key_path = "Software\\"
 
 constexpr std::string_view reg_key_name = "AppsUseLightTheme";
 
+util::scoped_event_t make_event() {
+    const auto raw_event = ::CreateEventA(
+        nullptr, // lpEventAttributes
+        false,   // bManualReset
+        false,   // bInitialState
+        nullptr  // lpName
+    );
+
+    if(raw_event == nullptr) {
+        throw util::last_error_exception_t{};
+    } else {
+        return util::scoped_event_t{raw_event};
+    }
+}
+
 util::scoped_hkey_t make_theme_hkey() {
     HKEY ret;
 
@@ -36,21 +51,6 @@ util::scoped_hkey_t make_theme_hkey() {
     }
 }
 
-util::scoped_event_t make_event() {
-    const auto raw_event = ::CreateEventA(
-        nullptr, // lpEventAttributes
-        false,   // bManualReset
-        false,   // bInitialState
-        nullptr  // lpName
-    );
-
-    if(raw_event == nullptr) {
-        throw util::last_error_exception_t{};
-    } else {
-        return util::scoped_event_t{raw_event};
-    }
-}
-
 void register_event(HKEY theme_hkey, HANDLE event) {
     const auto register_result = ::RegNotifyChangeKeyValue(
         theme_hkey,                 // hKey
@@ -63,29 +63,6 @@ void register_event(HKEY theme_hkey, HANDLE event) {
     if(register_result != ERROR_SUCCESS) {
         throw util::last_error_exception_t{};
     }
-}
-
-bool wait_event(HANDLE event, DWORD ms) {
-    const auto result = ::WaitForSingleObject(event, ms);
-    switch(result) {
-        case WAIT_OBJECT_0: {
-            return true;
-        }
-
-        case WAIT_TIMEOUT: {
-            return false;
-        }
-
-        case WAIT_FAILED: {
-            throw util::last_error_exception_t{};
-        }
-    }
-
-    const auto error_string = std::format(
-        "Got an unexpected result from `WaitForSingleObject`: {}",
-        result
-    );
-    throw std::runtime_error{error_string};
 }
 
 } // anonymous namespace
@@ -142,26 +119,32 @@ auto reg_monitor_t::query() -> appearance_t {
 }
 
 void reg_monitor_t::tick() {
-    start_event_wait(0);
+    (void)start_event_wait(0);
 }
 
 void reg_monitor_t::run() {
-    while(true) {
-        start_event_wait(INFINITE);
-    }
+    while(start_event_wait(INFINITE) != exit_reason_t::terminated)
+        ;
+}
+
+void reg_monitor_t::stop() {
+    event_.terminate();
 }
 
 // private
-void reg_monitor_t::start_event_wait(DWORD ms) {
-    if(!event_) {
-        event_ = make_event();
+auto reg_monitor_t::start_event_wait(DWORD ms) -> exit_reason_t {
+    if(!event_.get()) {
+        event_.set(make_event());
         register_event(theme_hkey_.get(), event_.get());
     }
 
-    if(wait_event(event_.get(), ms)) {
+    const auto ret = event_.wait(ms);
+    if(ret == exit_reason_t::signaled) {
         event_.reset();
         callback_(query());
     }
+
+    return ret;
 }
 
 } // namespace siga::dark_notify::impl::windows
