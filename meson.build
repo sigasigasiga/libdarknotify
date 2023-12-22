@@ -5,4 +5,6 @@ if host_machine.system().startswith('darwin')
 endif
 
 subdir('lib')
+
+# FIXME: build this subdir conditionally
 subdir('example')
