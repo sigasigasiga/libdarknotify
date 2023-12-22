@@ -1,4 +1,5 @@
 #include <cassert>
+#include <cstdint>
 #include <iostream>
 
 #include <siga/dark_notify/dark_notify.hpp>

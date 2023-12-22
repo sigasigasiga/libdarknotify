@@ -28,6 +28,21 @@ elif host_machine.system().startswith('windows')
     './siga/dark_notify/impl/windows/reg_monitor.cpp',
     './siga/dark_notify/impl/windows/util/cancellable_event.cpp',
   ]
+elif host_machine.system().startswith('linux')
+  darknotify_dependencies += [
+    dependency('glib-2.0'),
+    dependency('gobject-2.0'),
+    dependency('gio-2.0'),
+  ]
+
+  darknotify_headers += [
+    './siga/dark_notify/impl/xdg/glib.hpp',
+  ]
+
+  darknotify_sources += [
+    './siga/dark_notify/dark_notify.cpp',
+    './siga/dark_notify/impl/xdg/glib.cpp',
+  ]
 endif
 
 darknotify_lib = library(
