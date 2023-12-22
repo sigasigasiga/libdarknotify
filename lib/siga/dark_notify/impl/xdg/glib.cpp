@@ -21,7 +21,8 @@ using appearance_t = glib_t::appearance_t;
 appearance_t to_appearance(color_scheme_t color_scheme) {
     switch(color_scheme) {
         case color_scheme_t::no_preference: {
-            return appearance_t::unknown; // FIXME: or is it?
+            // for some reason it refers to the light mode
+            return appearance_t::light;
         }
 
         case color_scheme_t::prefers_dark: {
@@ -69,6 +70,7 @@ glib_t::glib_t() {
         throw std::bad_alloc{};
     }
 
+    g_autoptr(GError) error;
     g_autoptr(GDBusProxy) portal{::g_dbus_proxy_new_for_bus_sync(
         G_BUS_TYPE_SESSION,
         G_DBUS_PROXY_FLAGS_NONE,
@@ -77,15 +79,21 @@ glib_t::glib_t() {
         "/org/freedesktop/portal/desktop",
         "org.freedesktop.portal.Settings",
         nullptr,
-        nullptr // FIXME: pass a `GError` object here
+        &error
     )};
 
     if(!portal) {
-        // FIXME: add an error description here
-        throw std::runtime_error{"Cannot connect to the portal: "s};
+        if(error) {
+            throw std::runtime_error{"Cannot connect to the portal: "s + error->message};
+        } else {
+            throw std::bad_alloc{};
+        }
     }
 
+    g_main_loop_ref(loop);
     loop_.reset(loop);
+
+    g_object_ref(portal);
     portal_.reset(portal);
 }
 
@@ -134,7 +142,7 @@ appearance_t glib_t::query() {
     );
 
     if(!result) {
-        return appearance_t::unknown; // FIXME: or is it?
+        return appearance_t::unknown;
     }
 
     g_autoptr(GVariant) outer = nullptr;

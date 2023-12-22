@@ -32,8 +32,16 @@ private:
     template<typename T>
     using ptr_t = std::unique_ptr<T, g_unref_t>;
 
+    class g_main_loop_unref_t
+    {
+    public:
+        void operator()(GMainLoop *ptr) { ::g_main_loop_unref(ptr); }
+    };
+
+    using main_loop_t = std::unique_ptr<GMainLoop, g_main_loop_unref_t>;
+
 private:
-    ptr_t<GMainLoop> loop_;
+    main_loop_t loop_;
     ptr_t<GDBusProxy> portal_;
 
     callback_t cb_;
